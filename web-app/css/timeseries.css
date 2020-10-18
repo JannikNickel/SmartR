@@ -1,0 +1,25 @@
+path {
+    stroke: red;
+    stroke-width: 2;
+    fill: none;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: gray;
+    stroke-width: 1;
+    shape-rendering: crispEdges;
+}
+
+.tooltip {
+    position: absolute;
+    width: auto;
+    background-color: rgb(200, 200, 200);
+    text-anchor: middle;
+}
+
+.sr-workflow-controls>div {
+    float: right;
+    padding: 5px 15px 5px 15px;
+}

@@ -324,7 +324,7 @@ class DataFetchTask extends AbstractTask {
         }
         line += columns.collect {
             if (it instanceof AssayColumn) {
-                it.patient.id  // for high dim data, use patient id rather than row label as the CSV header
+                (it.label + "_" + it.getTimepoint().label) //Changed for timeseries visualization, should be an option based on the workflow
             } else {
                 it.label
             }
