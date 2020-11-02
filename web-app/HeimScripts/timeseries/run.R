@@ -10,11 +10,33 @@ main <- function(transformation="raw") {
     json <- toJSON(loaded_variables)
     write(json, file="loaded_variables.json")
     save(loaded_variables, file="loaded_variables.Rda")
+    
+    all_variable_names = list()
+    variable_appendix = 1
 
     for(v in 1:length(loaded_variables))
     {
         len <- length(loaded_variables[[v]])
         probes = names(loaded_variables[[v]])
+        
+        #Find variable name from fetch_params
+        variable_name <- "Unknown"
+        variable_info <- fetch_params[[1]][[v]]
+        variable_titles <- names(fetch_params[[1]][[v]])
+        for(i in 1:length(variable_info))
+        {
+            if(variable_titles[[i]] == "name")
+            {
+                variable_name <- variable_info[[i]]
+                #Dont allow duplicated variable names (append number in case that happens)
+                if(variable_name %in% all_variable_names)
+                {
+                    variable_name <- paste(c(variable_info[[i]], variable_appendix), collapse=" ")
+                    variable_appendix = variable_appendix + 1
+                }
+                all_variable_names[[length(all_variable_names) + 1]] <- variable_name
+            }
+        }
 
         #Iterate through probes (1 = Row.Label, 2 = biomarker, 3 = first probe)
         for(i in 3:len)
@@ -68,7 +90,7 @@ main <- function(transformation="raw") {
             probe_parts = unlist(strsplit(probe, "_"))
 
             #Add line to output: (Item, Numeric, Patient-ID, Sequence number, Datetime, value)
-            output[[length(output) + 1]] <- c(probe_parts[[1]], is_numeric, probe_parts[[2]], probe_parts[[3]], probe_parts[[4]], value)
+            output[[length(output) + 1]] <- c(variable_name, is_numeric, probe_parts[[2]], probe_parts[[3]], probe_parts[[4]], value)
         }
     }
 
